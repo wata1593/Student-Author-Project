@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>온라인 서점 모둠 검색</title>
+    <style>
+        /* 화면 중앙 정렬 스타일 */
+        body {
+            font-family: 'Malgun Gothic', sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .main-container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 800px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        /* 2x2 그리드 배치 */
+        .search-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .search-item {
+            background: #fff;
+            border: 1px solid #eee;
+            padding: 20px;
+            border-radius: 12px;
+            transition: transform 0.2s;
+        }
+
+        .search-item:hover {
+            transform: translateY(-5px);
+            border-color: #007bff;
+        }
+
+        .search-item h3 {
+            margin-top: 0;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        /* 입력창 및 버튼 스타일 */
+        .input-group {
+            display: flex;
+            gap: 5px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            outline: none;
+        }
+
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        /* 서점별 고유 색상 */
+        .btn-aladin {
+            background-color: #fb8c00;
+        }
+
+        /* 알라딘 주황 */
+        .btn-kyobo {
+            background-color: #5d5d5d;
+        }
+
+        /* 교보문고 회색 */
+        .btn-yes24 {
+            background-color: #2b5ab1;
+        }
+
+        /* YES24 파랑 */
+        .btn-yp {
+            background-color: #006633;
+        }
+
+        /* 영풍문고 초록 */
+
+        button:hover {
+            opacity: 0.8;
+        }
+
+        /* 반응형: 화면이 작아지면 1줄로 */
+        @media (max-width: 600px) {
+            .search-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <a href="index.html"
+        style="position: absolute; top: 15px; left: 15px; z-index: 9999; text-decoration: none; background-color: rgba(255, 255, 255, 0.8); padding: 5px 10px; border-radius: 5px; font-weight: bold; color: #333; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">🏠
+        홈으로</a>
+
+    <div class="main-container">
+        <h1>📚 온라인 서점 모둠 검색</h1>
+
+        <div class="search-grid">
+            <div class="search-item">
+                <h3 style="color: #fb8c00;">알라딘</h3>
+                <div class="input-group">
+                    <input type="text" id="q_aladin" placeholder="검색어 입력..."
+                        onkeypress="if(event.keyCode==13) search('aladin')">
+                    <button class="btn-aladin" onclick="search('aladin')">검색</button>
+                </div>
+            </div>
+
+            <div class="search-item">
+                <h3 style="color: #5d5d5d;">교보문고</h3>
+                <div class="input-group">
+                    <input type="text" id="q_kyobo" placeholder="검색어 입력..."
+                        onkeypress="if(event.keyCode==13) search('kyobo')">
+                    <button class="btn-kyobo" onclick="search('kyobo')">검색</button>
+                </div>
+            </div>
+
+            <div class="search-item">
+                <h3 style="color: #2b5ab1;">YES24</h3>
+                <div class="input-group">
+                    <input type="text" id="q_yes24" placeholder="검색어 입력..."
+                        onkeypress="if(event.keyCode==13) search('yes24')">
+                    <button class="btn-yes24" onclick="search('yes24')">검색</button>
+                </div>
+            </div>
+
+            <div class="search-item">
+                <h3 style="color: #006633;">영풍문고</h3>
+                <div class="input-group">
+                    <input type="text" id="q_yp" placeholder="검색어 입력..."
+                        onkeypress="if(event.keyCode==13) search('yp')">
+                    <button class="btn-yp" onclick="search('yp')">검색</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function search(store) {
+            let keyword = "";
+            let url = "";
+
+            if (store === 'aladin') {
+                keyword = document.getElementById('q_aladin').value;
+                url = "https://www.aladin.co.kr/search/wsearchresult.aspx?SearchTarget=All&SearchWord=";
+            } else if (store === 'kyobo') {
+                keyword = document.getElementById('q_kyobo').value;
+                url = "https://search.kyobobook.co.kr/search?keyword=";
+            } else if (store === 'yes24') {
+                keyword = document.getElementById('q_yes24').value;
+                url = "https://www.yes24.com/Product/Search?domain=ALL&query=";
+            } else if (store === 'yp') {
+                keyword = document.getElementById('q_yp').value;
+                url = "https://www.ypbooks.co.kr/search.yp?query=";
+            }
+
+            if (!keyword) {
+                alert("검색어를 입력해주세요!");
+                return;
+            }
+
+            window.open(url + encodeURIComponent(keyword), "_blank");
+        }
+    </script>
+
+</body>
+
+</html>

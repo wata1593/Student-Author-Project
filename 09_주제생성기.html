@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 주제생성기 | 나만의 책 만들기</title>
+    <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary-bg: #0f172a;
+            --card-bg: #1e293b;
+            --accent-color: #00f2fe;
+            --neon-pink: #ff007a;
+            --text-white: #f8fafc;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-white);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        .container {
+            text-align: center;
+            width: 90%;
+            max-width: 800px;
+        }
+
+        h1 {
+            font-family: 'Black Han Sans', sans-serif;
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, var(--accent-color), var(--neon-pink));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        p.subtitle {
+            font-size: 1.1rem;
+            color: #94a3b8;
+            margin-bottom: 40px;
+        }
+
+        /* 슬롯 머신 스타일 */
+        .slot-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .slot {
+            background: var(--card-bg);
+            width: 130px;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 15px;
+            border: 2px solid #334155;
+            font-weight: bold;
+            font-size: 1.2rem;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .slot.active {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 20px var(--accent-color);
+            transform: scale(1.05);
+        }
+
+        /* 버튼 스타일 */
+        .generate-btn {
+            background: linear-gradient(45deg, var(--accent-color), var(--neon-pink));
+            color: white;
+            border: none;
+            padding: 20px 50px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(255, 0, 122, 0.4);
+            transition: 0.2s;
+            font-family: 'Black Han Sans', sans-serif;
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(255, 0, 122, 0.6);
+        }
+
+        .generate-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* 결과 가이드 */
+        .result-guide {
+            margin-top: 50px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            line-height: 1.8;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: 0.5s ease-out;
+        }
+
+        .result-guide.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .highlight {
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+
+        @media (max-width: 600px) {
+            .slot {
+                width: 100px;
+                height: 80px;
+                font-size: 1rem;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <a href="index.html"
+        style="position: absolute; top: 15px; left: 15px; z-index: 9999; text-decoration: none; background-color: rgba(255, 255, 255, 0.8); padding: 5px 10px; border-radius: 5px; font-weight: bold; color: #333; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">🏠
+        홈으로</a>
+
+    <div class="container">
+        <h1>주제생성기</h1>
+        <p class="subtitle">5개의 키워드를 조합해 세상에 하나뿐인 이야기를 만들어봐!</p>
+
+        <div class="slot-container">
+            <div class="slot" id="word1">?</div>
+            <div class="slot" id="word2">?</div>
+            <div class="slot" id="word3">?</div>
+            <div class="slot" id="word4">?</div>
+            <div class="slot" id="word5">?</div>
+        </div>
+
+        <button class="generate-btn" onclick="generateTheme()">주제 믹스하기!</button>
+
+        <div class="result-guide" id="guide">
+            <h3 id="idea-title">✨ 오늘의 영감</h3>
+            <p id="idea-text"></p>
+        </div>
+    </div>
+
+    <script>
+        // 중학생 수준의 흥미로운 단어 라이브러리
+        const wordPool = {
+            1: ["인공지능", "평행세계", "비밀일기", "우리학교", "타임머신", "메타버스", "좀비", "고양이", "첫사랑", "유튜브"],
+            2: ["사라진", "수상한", "평범한", "뒤바뀐", "마지막", "꿈속의", "용감한", "어쩌다", "비밀스러운", "새벽의"],
+            3: ["편지", "탐험기", "복수극", "편의점", "도서관", "스마트폰", "게임", "짝사랑", "우주선", "지하실"],
+            4: ["찾아서", "지키는 법", "탈출기", "사용설명서", "인터뷰", "관찰일지", "고백", "습격", "재구성", "생존기"],
+            5: ["(소설)", "(에세이)", "(웹툰콘티)", "(동화)", "(추리물)", "(SF)", "(시집)", "(시나리오)", "(다큐)", "(판타지)"]
+        };
+
+        function generateTheme() {
+            const slots = document.querySelectorAll('.slot');
+            const guide = document.getElementById('guide');
+            const ideaText = document.getElementById('idea-text');
+
+            // 버튼 누를 때마다 애니메이션 리셋
+            guide.classList.remove('show');
+
+            slots.forEach((slot, index) => {
+                let count = 0;
+                const maxCycles = 10 + (index * 5); // 각 슬롯마다 멈추는 속도 다르게
+
+                const timer = setInterval(() => {
+                    slot.classList.add('active');
+                    const randomArr = wordPool[index + 1];
+                    slot.innerText = randomArr[Math.floor(Math.random() * randomArr.length)];
+                    count++;
+
+                    if (count >= maxCycles) {
+                        clearInterval(timer);
+                        slot.classList.remove('active');
+                        if (index === 4) showGuide(); // 마지막 슬롯 멈추면 가이드 표시
+                    }
+                }, 50);
+            });
+        }
+
+        function showGuide() {
+            const w1 = document.getElementById('word1').innerText;
+            const w2 = document.getElementById('word2').innerText;
+            const w3 = document.getElementById('word3').innerText;
+            const w4 = document.getElementById('word4').innerText;
+            const w5 = document.getElementById('word5').innerText;
+
+            const guide = document.getElementById('guide');
+            const ideaText = document.getElementById('idea-text');
+
+            guide.classList.add('show');
+            ideaText.innerHTML = `
+            멋진 주제가 나왔어! <br>
+            <span class="highlight">"${w1} ${w2} ${w3} ${w4}"</span> 주제로 
+            <span class="highlight">${w5}</span> 장르의 글을 써보는 건 어때? <br>
+            이 키워드들이 포함된 이야기를 구상해봐!
+        `;
+        }
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>무료 이미지 검색</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f2f5;
+            font-family: sans-serif;
+        }
+
+        .search-box {
+            border: 2px solid #05a081;
+            padding: 20px;
+            border-radius: 10px;
+            width: 350px;
+            background-color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .search-box h3 {
+            margin: 0 0 15px 0;
+            color: #05a081;
+            font-size: 18px;
+        }
+
+        .search-input-container {
+            display: flex;
+            gap: 5px;
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .search-box button {
+            padding: 10px 15px;
+            background: #05a081;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .search-box button:hover {
+            background: #048a6e;
+        }
+    </style>
+</head>
+
+<body>
+    <a href="index.html"
+        style="position: absolute; top: 15px; left: 15px; z-index: 9999; text-decoration: none; background-color: rgba(255, 255, 255, 0.8); padding: 5px 10px; border-radius: 5px; font-weight: bold; color: #333; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">🏠
+        홈으로</a>
+
+    <div class="search-box">
+        <h3>🖼️ 무료 이미지 검색</h3>
+        <div class="search-input-container">
+            <input type="text" id="pixabayInput" placeholder="이미지 주제 입력..."
+                onkeypress="if(event.keyCode==13) doPixabaySearch()">
+            <button onclick="doPixabaySearch()">검색</button>
+        </div>
+    </div>
+
+    <script>
+        function doPixabaySearch() {
+            const word = document.getElementById('pixabayInput').value;
+            if (!word) {
+                alert('검색어를 입력해주세요');
+                return;
+            }
+            const url = "https://pixabay.com/ko/images/search/";
+            window.open(url + encodeURIComponent(word), "_blank");
+        }
+    </script>
+</body>
+
+</html>

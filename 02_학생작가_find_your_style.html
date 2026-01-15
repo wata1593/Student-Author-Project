@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>학생작가 프로젝트: 나의 작품 스타일 찾기</title>
+    <style>
+        :root {
+            --primary-color: #6c5ce7;
+            --secondary-color: #a29bfe;
+            --bg-color: #f9f9fb;
+            --text-color: #2d3436;
+        }
+
+        body {
+            font-family: 'Pretendard', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        #test-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+        }
+
+        p {
+            line-height: 1.6;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: 2px solid var(--secondary-color);
+            border-radius: 12px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .btn:hover {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        #progress {
+            height: 8px;
+            background: #eee;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        #progress-bar {
+            height: 100%;
+            background: var(--primary-color);
+            width: 0%;
+            border-radius: 4px;
+            transition: width 0.3s;
+        }
+
+        .result-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .recommendation {
+            background: #f0edff;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+    </style>
+</head>
+
+<body>
+    <a href="index.html"
+        style="position: absolute; top: 15px; left: 15px; z-index: 9999; text-decoration: none; background-color: rgba(255, 255, 255, 0.8); padding: 5px 10px; border-radius: 5px; font-weight: bold; color: #333; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">🏠
+        홈으로</a>
+
+    <div id="test-container">
+        <div id="start-screen">
+            <h1>✍️ 나의 학생작가 유형은?</h1>
+            <p>프로젝트 기획 단계! 내 특기와 취미에 딱 맞는<br>작품 표현 방식을 찾아보자.</p>
+            <button class="btn" onclick="startTest()">테스트 시작하기</button>
+        </div>
+
+        <div id="question-screen" class="hidden">
+            <div id="progress">
+                <div id="progress-bar"></div>
+            </div>
+            <p id="question-text">질문 내용이 여기에 표시됩니다.</p>
+            <div id="answer-buttons"></div>
+        </div>
+
+        <div id="result-screen" class="hidden">
+            <h2>당신에게 추천하는 방식은?</h2>
+            <div id="result-desc"></div>
+            <div class="recommendation" id="result-tags"></div>
+            <button class="btn" onclick="location.reload()" style="margin-top: 20px;">다시 테스트하기</button>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            { q: "친구들에게 나의 주말을 설명할 때 나는?", a: [{ t: "말로 상황을 길게 설명한다", type: "lang" }, { t: "찍어둔 사진이나 영상을 보여준다", type: "visual" }] },
+            { q: "내가 더 좋아하는 시간은?", a: [{ t: "혼자 상상하며 멍 때리기", type: "creative" }, { t: "유용한 정보 찾아보기", type: "info" }] },
+            { q: "노트를 정리할 때 나의 스타일은?", a: [{ t: "글씨 위주로 빽빽하게 적는다", type: "lang" }, { t: "그림이나 도표를 그려야 직성이 풀린다", type: "visual" }] },
+            { q: "어떤 이야기를 할 때 더 즐거운가요?", a: [{ t: "완전히 새로운 세계관 만들기", type: "creative" }, { t: "실제로 겪은 일이나 팩트 전달", type: "info" }] },
+            { q: "나의 가장 큰 장점은?", a: [{ t: "섬세한 감수성과 표현력", type: "lang" }, { t: "순발력과 남다른 관찰력", type: "visual" }] },
+            { q: "내가 책을 고른다면?", a: [{ t: "이야기가 긴 소설책", type: "creative" }, { t: "깔끔하게 정리된 실용서나 잡지", type: "info" }] },
+            { q: "작품을 만든다면 무엇을 보여주고 싶나요?", a: [{ t: "나의 깊은 속마음", type: "lang" }, { t: "내가 알고 있는 꿀팁이나 정보", type: "info" }] }
+        ];
+
+        let currentIdx = 0;
+        let scores = { lang: 0, visual: 0, creative: 0, info: 0 };
+
+        function startTest() {
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('question-screen').classList.remove('hidden');
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const q = questions[currentIdx];
+            document.getElementById('question-text').innerText = q.q;
+            const btnContainer = document.getElementById('answer-buttons');
+            btnContainer.innerHTML = '';
+
+            q.a.forEach(answer => {
+                const btn = document.createElement('button');
+                btn.className = 'btn';
+                btn.innerText = answer.t;
+                btn.onclick = () => nextQuestion(answer.type);
+                btnContainer.appendChild(btn);
+            });
+
+            document.getElementById('progress-bar').style.width = ((currentIdx / questions.length) * 100) + '%';
+        }
+
+        function nextQuestion(type) {
+            scores[type]++;
+            currentIdx++;
+            if (currentIdx < questions.length) {
+                showQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            document.getElementById('question-screen').classList.add('hidden');
+            document.getElementById('result-screen').classList.remove('hidden');
+
+            let resultTitle = "";
+            let resultTags = "";
+
+            // 간단한 결과 로직 (가장 높은 점수 기반)
+            if (scores.lang >= scores.visual && scores.creative >= scores.info) {
+                resultTitle = "깊은 울림을 주는 '스토리텔러'";
+                resultTags = "추천 방식: 시, 소설, 수필";
+            } else if (scores.visual > scores.lang && scores.creative >= scores.info) {
+                resultTitle = "상상력을 시각화하는 '비주얼 아티스트'";
+                resultTags = "추천 방식: 동화, 만화, 그림";
+            } else if (scores.visual > scores.lang && scores.info > scores.creative) {
+                resultTitle = "찰나의 순간을 기록하는 '트렌드 세터'";
+                resultTags = "추천 방식: 사진, 잡지";
+            } else {
+                resultTitle = "지식을 체계화하는 '지식 큐레이터'";
+                resultTags = "추천 방식: 안내서, 잡지, 수필";
+            }
+
+            document.getElementById('result-desc').innerHTML = `<p class='result-title'>${resultTitle}</p>`;
+            document.getElementById('result-tags').innerText = resultTags;
+        }
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>패들렛 가기</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f2f5;
+            font-family: sans-serif;
+        }
+
+        .search-box {
+            border: 2px solid #e91e63;
+            padding: 20px;
+            border-radius: 10px;
+            width: 350px;
+            background-color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .search-box h3 {
+            margin: 0 0 15px 0;
+            color: #e91e63;
+            font-size: 18px;
+            text-align: left;
+        }
+
+        .go-btn {
+            width: 100%;
+            padding: 12px;
+            color: #444;
+            /* Darker text for better contrast on pastel */
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 10px;
+            transition: transform 0.2s, opacity 0.2s;
+        }
+
+        .go-btn:last-child {
+            margin-bottom: 0;
+        }
+
+        .go-btn:hover {
+            transform: translateY(-2px);
+            opacity: 0.9;
+        }
+
+        /* Pastel Pink for Collection */
+        .btn-collect {
+            background-color: #FFB7B2;
+        }
+
+        /* Pastel Mint for Organization */
+        .btn-organize {
+            background-color: #B5EAD7;
+        }
+    </style>
+</head>
+
+<body>
+    <a href="index.html"
+        style="position: absolute; top: 15px; left: 15px; z-index: 9999; text-decoration: none; background-color: rgba(255, 255, 255, 0.8); padding: 5px 10px; border-radius: 5px; font-weight: bold; color: #333; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">🏠
+        홈으로</a>
+
+    <div class="search-box">
+        <h3>📝 작업활동 하러가기</h3>
+        <button class="go-btn btn-collect" onclick="goToPadlet1()">작품활동 모아두기</button>
+        <button class="go-btn btn-organize" onclick="goToPadlet2()">작품활동 정리하기</button>
+    </div>
+
+    <script>
+        function goToPadlet1() {
+            window.open("https://padlet.com/dimia1244/2025-1-nc33w6bukd3uzpfv", "_blank");
+        }
+        function goToPadlet2() {
+            window.open("https://padlet.com/dimia1244/2025-2-j4oohnigc8v5cpdr", "_blank");
+        }
+    </script>
+</body>
+
+</html>

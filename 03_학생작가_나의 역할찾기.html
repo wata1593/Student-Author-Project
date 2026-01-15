@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>나의 책쓰기 역할 찾기 테스트</title>
+    <style>
+        /* CSS 스타일링 */
+        body {
+            font-family: 'Pretendard', sans-serif;
+            background-color: #f0f4f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        #game-container {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #2c3e50;
+            font-size: 1.5rem;
+        }
+
+        .question {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            font-weight: bold;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 10px;
+            background-color: #3498db;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #2980b9;
+        }
+
+        #result {
+            display: none;
+        }
+
+        .result-title {
+            font-size: 1.8rem;
+            color: #e67e22;
+            margin-top: 10px;
+        }
+
+        .result-desc {
+            line-height: 1.6;
+            color: #555;
+            margin-top: 15px;
+        }
+
+        #progress {
+            height: 10px;
+            background: #eee;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        #bar {
+            height: 100%;
+            background: #3498db;
+            width: 0%;
+            transition: width 0.3s;
+        }
+    </style>
+</head>
+
+<body>
+    <a href="index.html"
+        style="position: absolute; top: 15px; left: 15px; z-index: 9999; text-decoration: none; background-color: rgba(255, 255, 255, 0.8); padding: 5px 10px; border-radius: 5px; font-weight: bold; color: #333; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">🏠
+        홈으로</a>
+
+    <div id="game-container">
+        <div id="progress">
+            <div id="bar"></div>
+        </div>
+
+        <div id="question-screen">
+            <h1 id="question-number">Q1.</h1>
+            <p class="question" id="question-text">질문 내용이 여기에 표시됩니다.</p>
+            <button class="btn" onclick="nextQuestion('A')">선택지 1</button>
+            <button class="btn" onclick="nextQuestion('B')">선택지 2</button>
+        </div>
+
+        <div id="result">
+            <h1>나의 역할은...</h1>
+            <div class="result-title" id="role-name">역할 이름</div>
+            <p class="result-desc" id="role-desc">상세 설명</p>
+            <button class="btn" onclick="location.reload()">다시 테스트하기</button>
+        </div>
+    </div>
+
+    <script>
+        // 질문 데이터
+        const questions = [
+            { q: "새로운 아이디어가 떠오르면 나는?", a: "글로 적어본다", b: "그림이나 장면으로 상상한다", type: "writer-visual" },
+            { q: "멋진 풍경을 보면 나는?", a: "사진을 찍어 남기고 싶다", b: "이걸 어떻게 꾸미면 예쁠지 고민한다", type: "photo-design" },
+            { q: "책을 고를 때 더 끌리는 것은?", a: "흥미진진한 줄거리와 문장", b: "화려하고 예쁜 책 표지", type: "writer-design" },
+            { q: "나는 평소에 어떤 도구를 더 좋아하나?", a: "연필이나 키보드", b: "카메라나 드로잉 도구", type: "writer-visual" },
+            { q: "친구의 생일 선물을 줄 때?", a: "정성스러운 편지를 쓴다", b: "선물 포장을 예쁘게 꾸민다", type: "writer-design" }
+        ];
+
+        // 결과 데이터
+        const roles = {
+            writer: { name: "📝 작가", desc: "당신은 이야기의 뼈대를 만드는 창조자입니다! 풍부한 상상력과 논리적인 사고로 독자의 마음을 움직이는 글을 써보세요." },
+            illustrator: { name: "🎨 삽화가", desc: "글에 생명력을 불어넣는 마술사! 당신의 그림은 독자들이 이야기를 더 쉽게 이해하고 몰입하게 도와줍니다." },
+            designer: { name: "✨ 표지 디자이너", desc: "책의 첫인상을 결정하는 예술가! 색감과 배치를 활용해 누구나 집어 들고 싶은 멋진 책을 만들어보세요." },
+            photographer: { name: "📸 포토그래퍼", desc: "순간의 찰나를 기록하는 기록자! 생생한 현장감과 감성적인 사진으로 책의 퀄리티를 높여줍니다." }
+        };
+
+        let currentIdx = 0;
+        let scores = { writer: 0, illustrator: 0, designer: 0, photographer: 0 };
+
+        function updateQuestion() {
+            if (currentIdx < questions.length) {
+                const q = questions[currentIdx];
+                document.getElementById("question-number").innerText = `Q${currentIdx + 1}.`;
+                document.getElementById("question-text").innerText = q.q;
+                document.querySelectorAll(".btn")[0].innerText = q.a;
+                document.querySelectorAll(".btn")[1].innerText = q.b;
+                document.getElementById("bar").style.width = `${(currentIdx / questions.length) * 100}%`;
+            } else {
+                showResult();
+            }
+        }
+
+        function nextQuestion(choice) {
+            // 간단한 점수 로직 (질문 유형에 따라 점수 부여)
+            if (currentIdx === 0) choice === 'A' ? scores.writer++ : scores.illustrator++;
+            if (currentIdx === 1) choice === 'A' ? scores.photographer++ : scores.designer++;
+            if (currentIdx === 2) choice === 'A' ? scores.writer++ : scores.designer++;
+            if (currentIdx === 3) choice === 'A' ? scores.writer++ : scores.illustrator++;
+            if (currentIdx === 4) choice === 'A' ? scores.writer++ : scores.designer++;
+
+            currentIdx++;
+            updateQuestion();
+        }
+
+        function showResult() {
+            document.getElementById("question-screen").style.display = "none";
+            document.getElementById("result").style.display = "block";
+            document.getElementById("bar").style.width = "100%";
+
+            // 가장 높은 점수 찾기
+            let maxRole = 'writer';
+            if (scores.illustrator > scores.writer) maxRole = 'illustrator';
+            if (scores.designer > scores[maxRole]) maxRole = 'designer';
+            if (scores.photographer > scores[maxRole]) maxRole = 'photographer';
+
+            document.getElementById("role-name").innerText = roles[maxRole].name;
+            document.getElementById("role-desc").innerText = roles[maxRole].desc;
+        }
+
+        // 첫 질문 시작
+        updateQuestion();
+    </script>
+
+</body>
+
+</html>
