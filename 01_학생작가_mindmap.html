@@ -1,28 +1,22 @@
 <!DOCTYPE html>
 <html lang="ko">
-
 <head>
     <meta charset="UTF-8">
-    <title>🎨 깔끔한 고화질 마인드맵</title>
+    <title>🎨 마인드맵 </title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <style>
-        :root {
-            --primary: #6C63FF;
-            --secondary: #FF6584;
-            --bg: #1a1a2e;
-            --node-bg: #ffffff;
-        }
-
-        body {
-            font-family: 'Noto Sans KR', sans-serif;
-            background: var(--bg);
-            color: white;
-            margin: 0;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+        :root { --primary: #6C63FF; --secondary: #FF6584; --bg: #1a1a2e; --node-bg: #ffffff; }
+        
+        body { 
+            font-family: 'Noto Sans KR', sans-serif; 
+            background: var(--bg); 
+            color: white; 
+            margin: 0; 
+            overflow: hidden; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
         }
 
         /* 📋 뚜렷하고 깔끔한 제목 디자인 */
@@ -40,265 +34,204 @@
             margin: 0;
             padding: 10px;
             /* 글씨를 더 뚜렷하게 만드는 외곽선 효과 */
-            text-shadow: 2px 2px 0px var(--primary), 4px 4px 0px rgba(0, 0, 0, 0.3);
+            text-shadow: 2px 2px 0px var(--primary), 4px 4px 0px rgba(0,0,0,0.3);
             letter-spacing: -1px;
         }
 
         /* 🛠️ UI 레이어 위치 조정 (제목 아래로) */
-        #ui-layer {
+        #ui-layer { 
             margin-top: 20px;
-            position: relative;
-            /* fixed에서 변경하여 제목과 겹침 방지 */
-            z-index: 100;
-            display: flex;
-            gap: 10px;
-            background: rgba(255, 255, 255, 0.9);
-            /* 가독성을 위해 불투명도 높임 */
-            padding: 12px 20px;
-            border-radius: 50px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            position: relative; /* fixed에서 변경하여 제목과 겹침 방지 */
+            z-index: 100; 
+            display: flex; 
+            gap: 10px; 
+            background: rgba(255, 255, 255, 0.9); /* 가독성을 위해 불투명도 높임 */
+            padding: 12px 20px; 
+            border-radius: 50px; 
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3); 
         }
 
-        #ui-layer input {
-            padding: 10px 15px;
-            border-radius: 20px;
-            border: 2px solid #ddd;
-            outline: none;
-            width: 150px;
+        #ui-layer input { 
+            padding: 10px 15px; 
+            border-radius: 20px; 
+            border: 2px solid #ddd; 
+            outline: none; 
+            width: 150px; 
             color: #333;
             font-weight: bold;
         }
 
-        #ui-layer button {
-            padding: 10px 18px;
-            border-radius: 20px;
-            border: none;
-            cursor: pointer;
-            font-weight: 700;
-            transition: 0.2s;
+        #ui-layer button { 
+            padding: 10px 18px; 
+            border-radius: 20px; 
+            border: none; 
+            cursor: pointer; 
+            font-weight: 700; 
+            transition: 0.2s; 
         }
-
-        .btn-add {
-            background: var(--primary);
-            color: white;
-        }
-
-        .btn-edit {
-            background: #f1c40f;
-            color: #333;
-        }
-
-        .btn-del {
-            background: var(--secondary);
-            color: white;
-        }
-
-        .btn-save {
-            background: #00cec9;
-            color: white;
-        }
-
-        button:hover {
-            opacity: 0.9;
-            transform: translateY(-2px);
-        }
+        
+        .btn-add { background: var(--primary); color: white; }
+        .btn-edit { background: #f1c40f; color: #333; }
+        .btn-del { background: var(--secondary); color: white; }
+        .btn-save { background: #00cec9; color: white; }
+        button:hover { opacity: 0.9; transform: translateY(-2px); }
 
         /* 🗺️ 마인드맵 영역 */
-        #map-area {
-            width: 100vw;
-            height: calc(100vh - 180px);
-            position: relative;
-            background: var(--bg);
+        #map-area { width: 100vw; height: calc(100vh - 180px); position: relative; background: var(--bg); }
+        
+        .node { 
+            position: absolute; padding: 12px 25px; background: var(--node-bg); color: #333; 
+            border-radius: 50px; font-weight: 700; cursor: grab; transform: translate(-50%, -50%); 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3); border: 3px solid transparent; z-index: 2; 
+            white-space: nowrap; user-select: none;
         }
+        .node.selected { border-color: #FFD700; box-shadow: 0 0 15px #FFD700; }
+        .node.root { background: #FFD700; color: #000; font-size: 1.1em; }
 
-        .node {
-            position: absolute;
-            padding: 12px 25px;
-            background: var(--node-bg);
-            color: #333;
-            border-radius: 50px;
-            font-weight: 700;
-            cursor: grab;
-            transform: translate(-50%, -50%);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            border: 3px solid transparent;
-            z-index: 2;
-            white-space: nowrap;
-            user-select: none;
-        }
-
-        .node.selected {
-            border-color: #FFD700;
-            box-shadow: 0 0 15px #FFD700;
-        }
-
-        .node.root {
-            background: #FFD700;
-            color: #000;
-            font-size: 1.1em;
-        }
-
-        svg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        line {
-            stroke: rgba(255, 255, 255, 0.3);
-            stroke-width: 2.5;
-        }
+        svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
+        line { stroke: rgba(255, 255, 255, 0.3); stroke-width: 2.5; }
     </style>
 </head>
-
 <body>
-    <a href="index.html"
-        style="position: absolute; top: 15px; left: 15px; z-index: 9999; text-decoration: none; background-color: rgba(255, 255, 255, 0.8); padding: 5px 10px; border-radius: 5px; font-weight: bold; color: #333; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">🏠
-        홈으로</a>
 
-    <div class="header-container">
-        <h1 class="main-title">마인드맵 - 생각의 지도를 펼쳐요!</h1>
-    </div>
+<div class="header-container">
+    <h1 class="main-title">마인드맵 - 생각의 지도를 펼쳐요!</h1>
+</div>
 
-    <div id="ui-layer">
-        <input type="text" id="wordInput" placeholder="단어 입력">
-        <button class="btn-add" onclick="handleAdd()">추가</button>
-        <button class="btn-edit" onclick="handleEdit()">수정</button>
-        <button class="btn-del" onclick="handleDelete()">삭제</button>
-        <button class="btn-save" onclick="saveAsImage()">저장</button>
-    </div>
+<div id="ui-layer">
+    <input type="text" id="wordInput" placeholder="단어 입력">
+    <button class="btn-add" onclick="handleAdd()">추가</button>
+    <button class="btn-edit" onclick="handleEdit()">수정</button>
+    <button class="btn-del" onclick="handleDelete()">삭제</button>
+    <button class="btn-save" onclick="saveAsImage()">저장</button>
+</div>
 
-    <div id="map-area">
-        <svg id="svg-canvas"></svg>
-    </div>
+<div id="map-area">
+    <svg id="svg-canvas"></svg>
+</div>
 
-    <script>
-        // 화면 크기에 맞춰 중앙 좌표 계산 (헤더 높이 고려)
-        let nodes = [{ id: 0, text: "나", x: window.innerWidth / 2, y: (window.innerHeight - 180) / 2, parentId: null }];
-        let selectedId = 0;
-        let nextId = 1;
-        let draggingNode = null;
+<script>
+    // 화면 크기에 맞춰 중앙 좌표 계산 (헤더 높이 고려)
+    let nodes = [{ id: 0, text: "나", x: window.innerWidth / 2, y: (window.innerHeight - 180) / 2, parentId: null }];
+    let selectedId = 0;
+    let nextId = 1;
+    let draggingNode = null;
 
-        const container = document.getElementById('map-area');
-        const svg = document.getElementById('svg-canvas');
-        const input = document.getElementById('wordInput');
+    const container = document.getElementById('map-area');
+    const svg = document.getElementById('svg-canvas');
+    const input = document.getElementById('wordInput');
 
-        function render() {
-            container.querySelectorAll('.node').forEach(n => n.remove());
-            svg.innerHTML = '';
-            nodes.forEach(node => {
-                const div = document.createElement('div');
-                div.className = `node ${node.id === selectedId ? 'selected' : ''} ${node.id === 0 ? 'root' : ''}`;
-                div.style.left = node.x + 'px';
-                div.style.top = node.y + 'px';
-                div.textContent = node.text;
+    function render() {
+        container.querySelectorAll('.node').forEach(n => n.remove());
+        svg.innerHTML = '';
+        nodes.forEach(node => {
+            const div = document.createElement('div');
+            div.className = `node ${node.id === selectedId ? 'selected' : ''} ${node.id === 0 ? 'root' : ''}`;
+            div.style.left = node.x + 'px';
+            div.style.top = node.y + 'px';
+            div.textContent = node.text;
 
-                div.onmousedown = (e) => { if (e.button === 0) startDrag(e, node); };
-                div.onclick = () => { selectedId = node.id; render(); };
-                div.ondblclick = () => handleEdit();
+            div.onmousedown = (e) => { if(e.button === 0) startDrag(e, node); };
+            div.onclick = () => { selectedId = node.id; render(); };
+            div.ondblclick = () => handleEdit();
+            
+            container.appendChild(div);
 
-                container.appendChild(div);
-
-                if (node.parentId !== null) {
-                    const parent = nodes.find(n => n.id === node.parentId);
-                    if (parent) {
-                        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-                        line.setAttribute("x1", parent.x); line.setAttribute("y1", parent.y);
-                        line.setAttribute("x2", node.x); line.setAttribute("y2", node.y);
-                        svg.appendChild(line);
-                    }
+            if (node.parentId !== null) {
+                const parent = nodes.find(n => n.id === node.parentId);
+                if(parent) {
+                    const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                    line.setAttribute("x1", parent.x); line.setAttribute("y1", parent.y);
+                    line.setAttribute("x2", node.x); line.setAttribute("y2", node.y);
+                    svg.appendChild(line);
                 }
-            });
-        }
-
-        function startDrag(e, node) {
-            draggingNode = node;
-            selectedId = node.id;
-            render();
-            const onMouseMove = (me) => {
-                if (draggingNode) {
-                    // 부모 컨테이너의 위치를 고려한 좌표 계산
-                    const rect = container.getBoundingClientRect();
-                    draggingNode.x = me.clientX - rect.left;
-                    draggingNode.y = me.clientY - rect.top;
-                    render();
-                }
-            };
-            const onMouseUp = () => {
-                draggingNode = null;
-                document.removeEventListener('mousemove', onMouseMove);
-                document.removeEventListener('mouseup', onMouseUp);
-            };
-            document.addEventListener('mousemove', onMouseMove);
-            document.addEventListener('mouseup', onMouseUp);
-        }
-
-        function handleAdd() {
-            const text = input.value.trim();
-            if (!text) return;
-            const parent = nodes.find(n => n.id === selectedId);
-            const newNode = { id: nextId++, text: text, parentId: selectedId, x: parent.x + 80, y: parent.y + 80 };
-            nodes.push(newNode);
-            input.value = '';
-            selectedId = newNode.id;
-            render();
-        }
-
-        function handleEdit() {
-            const targetNode = nodes.find(n => n.id === selectedId);
-            if (!targetNode) return;
-            const newText = input.value.trim() || prompt("수정할 내용을 입력하세요:", targetNode.text);
-            if (newText) {
-                targetNode.text = newText;
-                input.value = "";
-                render();
             }
-        }
+        });
+    }
 
-        function handleDelete() {
-            if (selectedId === 0) return alert("중심 노드는 삭제할 수 없습니다!");
-            if (confirm("이 노드와 하위 항목을 삭제할까요?")) {
-                const ids = [];
-                function collect(id) {
-                    ids.push(id);
-                    nodes.filter(n => n.parentId === id).forEach(c => collect(c.id));
-                }
-                collect(selectedId);
-                nodes = nodes.filter(n => !ids.includes(n.id));
-                selectedId = 0;
-                render();
-            }
-        }
-
-        function saveAsImage() {
-            const btn = document.querySelector('.btn-save');
-            btn.innerText = "저장중...";
-            const tempSelectedId = selectedId;
-            selectedId = null;
-            render();
-
-            html2canvas(document.body, {
-                backgroundColor: "#1a1a2e",
-                scale: 2
-            }).then(canvas => {
-                const link = document.createElement('a');
-                link.download = `마인드맵.jpg`;
-                link.href = canvas.toDataURL('image/jpeg', 0.9);
-                link.click();
-                selectedId = tempSelectedId;
-                render();
-                btn.innerText = "저장";
-            });
-        }
-
-        input.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleAdd(); });
-        window.onresize = () => render();
+    function startDrag(e, node) {
+        draggingNode = node;
+        selectedId = node.id;
         render();
-    </script>
-</body>
+        const onMouseMove = (me) => {
+            if (draggingNode) {
+                // 부모 컨테이너의 위치를 고려한 좌표 계산
+                const rect = container.getBoundingClientRect();
+                draggingNode.x = me.clientX - rect.left;
+                draggingNode.y = me.clientY - rect.top;
+                render();
+            }
+        };
+        const onMouseUp = () => {
+            draggingNode = null;
+            document.removeEventListener('mousemove', onMouseMove);
+            document.removeEventListener('mouseup', onMouseUp);
+        };
+        document.addEventListener('mousemove', onMouseMove);
+        document.addEventListener('mouseup', onMouseUp);
+    }
 
+    function handleAdd() {
+        const text = input.value.trim();
+        if (!text) return;
+        const parent = nodes.find(n => n.id === selectedId);
+        const newNode = { id: nextId++, text: text, parentId: selectedId, x: parent.x + 80, y: parent.y + 80 };
+        nodes.push(newNode);
+        input.value = '';
+        selectedId = newNode.id;
+        render();
+    }
+
+    function handleEdit() {
+        const targetNode = nodes.find(n => n.id === selectedId);
+        if (!targetNode) return;
+        const newText = input.value.trim() || prompt("수정할 내용을 입력하세요:", targetNode.text);
+        if (newText) {
+            targetNode.text = newText;
+            input.value = "";
+            render();
+        }
+    }
+
+    function handleDelete() {
+        if (selectedId === 0) return alert("중심 노드는 삭제할 수 없습니다!");
+        if (confirm("이 노드와 하위 항목을 삭제할까요?")) {
+            const ids = [];
+            function collect(id) {
+                ids.push(id);
+                nodes.filter(n => n.parentId === id).forEach(c => collect(c.id));
+            }
+            collect(selectedId);
+            nodes = nodes.filter(n => !ids.includes(n.id));
+            selectedId = 0;
+            render();
+        }
+    }
+
+    function saveAsImage() {
+        const btn = document.querySelector('.btn-save');
+        btn.innerText = "저장중...";
+        const tempSelectedId = selectedId;
+        selectedId = null;
+        render();
+
+        html2canvas(document.body, {
+            backgroundColor: "#1a1a2e",
+            scale: 2
+        }).then(canvas => {
+            const link = document.createElement('a');
+            link.download = `마인드맵.jpg`;
+            link.href = canvas.toDataURL('image/jpeg', 0.9);
+            link.click();
+            selectedId = tempSelectedId;
+            render();
+            btn.innerText = "저장";
+        });
+    }
+
+    input.addEventListener('keypress', (e) => { if(e.key === 'Enter') handleAdd(); });
+    window.onresize = () => render();
+    render();
+</script>
+</body>
 </html>
