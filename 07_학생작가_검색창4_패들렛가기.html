@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>패들렛 가기</title>
+    <!-- QRCode.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         body {
             margin: 0;
@@ -20,24 +22,37 @@
             border: 2px solid #e91e63;
             padding: 20px;
             border-radius: 10px;
-            width: 350px;
+            width: 400px;
+            /* Increased width slightly for QR layout */
             background-color: white;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             text-align: center;
         }
 
+        /* Title Area Layout */
+        .title-area {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            /* Increased spacing */
+        }
+
         .search-box h3 {
-            margin: 0 0 15px 0;
+            margin: 0;
             color: #e91e63;
             font-size: 18px;
             text-align: left;
+        }
+
+        #qrcode {
+            /* QR Code styling */
         }
 
         .go-btn {
             width: 100%;
             padding: 12px;
             color: #444;
-            /* Darker text for better contrast on pastel */
             border: none;
             border-radius: 4px;
             cursor: pointer;
@@ -74,12 +89,26 @@
         홈으로</a>
 
     <div class="search-box">
-        <h3>📝 작업활동 하러가기</h3>
+        <div class="title-area">
+            <h3>📝 작업활동 하러가기</h3>
+            <div id="qrcode"></div>
+        </div>
+
         <button class="go-btn btn-collect" onclick="goToPadlet1()">작품활동 모아두기</button>
         <button class="go-btn btn-organize" onclick="goToPadlet2()">작품활동 정리하기</button>
     </div>
 
     <script>
+        // Generate QR Code
+        new QRCode(document.getElementById("qrcode"), {
+            text: window.location.href, // Current page URL
+            width: 50,
+            height: 50,
+            colorDark: "#e91e63", // Match theme color
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.H
+        });
+
         function goToPadlet1() {
             window.open("https://padlet.com/dimia1244/2025-1-nc33w6bukd3uzpfv", "_blank");
         }

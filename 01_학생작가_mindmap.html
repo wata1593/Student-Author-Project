@@ -3,285 +3,154 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>✨ 나를 탐구하는 마인드맵 ✨</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&family=Jua&display=swap"
-        rel="stylesheet">
+    <title>🎨 깔끔한 고화질 마인드맵</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <style>
         :root {
-            --primary-color: #8A2BE2;
-            /* 보라색 계열 */
-            --secondary-color: #FF69B4;
-            /* 핑크 계열 */
-            --accent-color: #FFD700;
-            /* 노란색 강조 */
-            --bg-color: #f0f2f5;
-            --text-color: #333;
-            --border-color: #d1d9e6;
+            --primary: #6C63FF;
+            --secondary: #FF6584;
+            --bg: #1a1a2e;
             --node-bg: #ffffff;
-            --font-jua: 'Jua', sans-serif;
-            /* 헤드라인용 */
-            --font-noto: 'Noto Sans KR', sans-serif;
-            /* 본문용 */
         }
 
         body {
-            font-family: var(--font-noto);
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            font-family: 'Noto Sans KR', sans-serif;
+            background: var(--bg);
+            color: white;
+            margin: 0;
+            overflow: hidden;
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-height: 100vh;
+        }
+
+        /* 📋 뚜렷하고 깔끔한 제목 디자인 */
+        .header-container {
+            width: 100%;
+            text-align: center;
+            padding-top: 30px;
+            z-index: 110;
+        }
+
+        .main-title {
+            font-weight: 900;
+            font-size: 2.2rem;
+            color: #ffffff;
             margin: 0;
-            padding: 20px;
-            box-sizing: border-box;
-            background-image: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 10px;
+            /* 글씨를 더 뚜렷하게 만드는 외곽선 효과 */
+            text-shadow: 2px 2px 0px var(--primary), 4px 4px 0px rgba(0, 0, 0, 0.3);
+            letter-spacing: -1px;
         }
 
-        h1 {
-            font-family: var(--font-jua);
-            color: var(--primary-color);
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-            margin-bottom: 25px;
-            font-size: 2.5em;
-        }
-
-        #controls {
-            background: linear-gradient(45deg, #ffffff, #f0f2f5);
-            border-radius: 15px;
-            padding: 20px 30px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-            margin-bottom: 30px;
+        /* 🛠️ UI 레이어 위치 조정 (제목 아래로) */
+        #ui-layer {
+            margin-top: 20px;
+            position: relative;
+            /* fixed에서 변경하여 제목과 겹침 방지 */
+            z-index: 100;
             display: flex;
-            gap: 15px;
-            align-items: center;
-            border: 1px solid var(--border-color);
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            /* 가독성을 위해 불투명도 높임 */
+            padding: 12px 20px;
+            border-radius: 50px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
         }
 
-        input[type="text"] {
-            padding: 12px 18px;
-            border: 2px solid var(--primary-color);
-            border-radius: 25px;
+        #ui-layer input {
+            padding: 10px 15px;
+            border-radius: 20px;
+            border: 2px solid #ddd;
             outline: none;
-            font-size: 1.1em;
-            width: 300px;
-            transition: all 0.3s ease;
-            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
-        }
-
-        input[type="text"]:focus {
-            border-color: var(--secondary-color);
-            box-shadow: 0 0 10px rgba(var(--secondary-color), 0.3);
-        }
-
-        button {
-            padding: 10px 18px;
-            border: none;
-            border-radius: 25px;
-            background-color: var(--primary-color);
-            color: white;
-            font-size: 1em;
+            width: 150px;
+            color: #333;
             font-weight: bold;
+        }
+
+        #ui-layer button {
+            padding: 10px 18px;
+            border-radius: 20px;
+            border: none;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 10px rgba(var(--primary-color), 0.3);
-            display: flex;
-            align-items: center;
-            gap: 5px;
+            font-weight: 700;
+            transition: 0.2s;
+        }
+
+        .btn-add {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-edit {
+            background: #f1c40f;
+            color: #333;
+        }
+
+        .btn-del {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .btn-save {
+            background: #00cec9;
+            color: white;
         }
 
         button:hover {
-            background-color: var(--secondary-color);
+            opacity: 0.9;
             transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(var(--secondary-color), 0.4);
         }
 
-        button:active {
-            transform: translateY(0);
-            box-shadow: 0 2px 5px rgba(var(--primary-color), 0.2);
-        }
-
-        /* 다운로드 버튼 스타일 (다른 버튼과 약간 다르게) */
-        #downloadBtn {
-            background-color: #28a745;
-            /* 초록색 */
-            box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3);
-        }
-
-        #downloadBtn:hover {
-            background-color: #218838;
-            box-shadow: 0 6px 15px rgba(40, 167, 69, 0.4);
-        }
-
-        /* 마인드맵 트리 구조 스타일링 */
-        .mindmap-wrapper {
-            width: 100%;
-            overflow-x: auto;
-            padding: 20px;
-            /* 캡처 시 배경이 잘리지 않도록 min-height와 min-width를 설정 */
-            min-height: 500px;
-            min-width: 800px;
-        }
-
-        .tree {
-            display: flex;
-            justify-content: center;
-            padding-top: 50px;
-            min-width: fit-content;
-            /* 내용에 따라 너비 확장 */
-        }
-
-        .tree ul {
-            padding-top: 30px;
-            /* 가지가 꺾이는 높이 */
+        /* 🗺️ 마인드맵 영역 */
+        #map-area {
+            width: 100vw;
+            height: calc(100vh - 180px);
             position: relative;
-            transition: all 0.5s;
-            display: flex;
-            justify-content: center;
-            margin: 0;
-            padding-left: 0;
-            list-style: none;
+            background: var(--bg);
         }
 
-        .tree li {
-            float: left;
-            /* 하위 노드들을 가로로 나열 */
-            text-align: center;
-            list-style-type: none;
-            position: relative;
-            padding: 20px 15px 0 15px;
-            /* 노드 간 간격 */
-            transition: all 0.5s;
-        }
-
-        /* 가지 (Line) 스타일 */
-        .tree li::before,
-        .tree li::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 50%;
-            border-top: 2px solid var(--primary-color);
-            width: 50%;
-            height: 30px;
-            /* 가지의 세로 길이 */
-            transition: all 0.5s;
-        }
-
-        .tree li::after {
-            right: auto;
-            left: 50%;
-            border-left: 2px solid var(--primary-color);
-        }
-
-        /* 첫 번째/마지막 자식 노드의 가지 조절 */
-        .tree li:only-child::after,
-        .tree li:only-child::before {
-            display: none;
-        }
-
-        .tree li:only-child {
-            padding-top: 0;
-        }
-
-        .tree li:first-child::before,
-        .tree li:last-child::after {
-            border: 0 none;
-        }
-
-        .tree li:last-child::before {
-            border-right: 2px solid var(--primary-color);
-            border-radius: 0 5px 0 0;
-        }
-
-        .tree li:first-child::after {
-            border-radius: 5px 0 0 0;
-        }
-
-        /* 부모에서 자식으로 내려오는 세로 가지 */
-        .tree ul ul::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 50%;
-            border-left: 2px solid var(--primary-color);
-            width: 0;
-            height: 30px;
-        }
-
-        /* 노드(Node) 상자 스타일 */
         .node {
+            position: absolute;
+            padding: 12px 25px;
             background: var(--node-bg);
-            border: 2px solid var(--primary-color);
-            padding: 12px 20px;
-            text-decoration: none;
-            color: var(--text-color);
-            font-weight: bold;
-            border-radius: 25px;
-            /* 둥근 모서리 */
-            display: inline-block;
-            cursor: pointer;
-            transition: all 0.3s ease, background 0.1s;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            position: relative;
-            min-width: 80px;
+            color: #333;
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: grab;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            border: 3px solid transparent;
+            z-index: 2;
             white-space: nowrap;
-            /* 내용이 넘치지 않도록 */
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .node:hover {
-            background: var(--bg-color);
-            border-color: var(--secondary-color);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+            user-select: none;
         }
 
         .node.selected {
-            background: var(--accent-color) !important;
-            border-color: #fbc02d !important;
-            transform: scale(1.05);
-            box-shadow: 0 8px 20px rgba(var(--accent-color), 0.4);
-            animation: pulse-selected 1.5s infinite alternate;
-            /* 선택 강조 애니메이션 */
+            border-color: #FFD700;
+            box-shadow: 0 0 15px #FFD700;
         }
 
-        /* 선택 노드 애니메이션 */
-        @keyframes pulse-selected {
-            0% {
-                box-shadow: 0 8px 20px rgba(255, 215, 0, 0.4);
-            }
-
-            100% {
-                box-shadow: 0 10px 25px rgba(255, 215, 0, 0.6);
-            }
+        .node.root {
+            background: #FFD700;
+            color: #000;
+            font-size: 1.1em;
         }
 
-        /* 수정 입력 필드 */
-        .node-input-edit {
+        svg {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: calc(100% - 10px);
-            /* 노드 패딩 고려 */
-            height: calc(100% - 10px);
-            border: 2px solid var(--secondary-color);
-            border-radius: 20px;
-            padding: 5px;
-            font-size: 1em;
-            font-family: var(--font-noto);
-            text-align: center;
-            box-shadow: 0 0 10px rgba(var(--secondary-color), 0.4);
-            z-index: 5;
-            /* 노드 위에 오도록 */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
         }
 
-        .placeholder-text {
-            color: #888;
-            font-style: italic;
+        line {
+            stroke: rgba(255, 255, 255, 0.3);
+            stroke-width: 2.5;
         }
     </style>
 </head>
@@ -291,203 +160,145 @@
         style="position: absolute; top: 15px; left: 15px; z-index: 9999; text-decoration: none; background-color: rgba(255, 255, 255, 0.8); padding: 5px 10px; border-radius: 5px; font-weight: bold; color: #333; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">🏠
         홈으로</a>
 
-    <h1>✨ 나를 탐구하는 마인드맵 ✨</h1>
-
-    <div id="controls">
-        <input type="text" id="wordInput" placeholder="새로운 생각 추가 또는 수정 (Enter)" autofocus>
-        <button id="addNodeBtn">➕ 추가</button>
-        <button id="downloadBtn">⬇️ JPG 다운로드</button>
+    <div class="header-container">
+        <h1 class="main-title">마인드맵 - 생각의 지도를 펼쳐요!</h1>
     </div>
 
-    <p style="font-size: 0.9em; color: #666; margin-bottom: 20px;">
-        💡 박스를 클릭해서 선택한 후 단어를 입력하면 아래쪽에 항목이 추가됩니다. 항목을 수정하고 싶으면 더블클릭하세요.
-    </p>
+    <div id="ui-layer">
+        <input type="text" id="wordInput" placeholder="단어 입력">
+        <button class="btn-add" onclick="handleAdd()">추가</button>
+        <button class="btn-edit" onclick="handleEdit()">수정</button>
+        <button class="btn-del" onclick="handleDelete()">삭제</button>
+        <button class="btn-save" onclick="saveAsImage()">저장</button>
+    </div>
 
-    <div class="mindmap-wrapper" id="mindmapWrapper">
-        <div class="tree" id="mindmap">
-            <ul>
-                <li>
-                    <div class="node selected" onclick="selectNode(this)" ondblclick="editNode(this)">
-                        <span class="node-text">나 (Me)</span>
-                    </div>
-                    <ul id="root-branches"></ul>
-                </li>
-            </ul>
-        </div>
+    <div id="map-area">
+        <svg id="svg-canvas"></svg>
     </div>
 
     <script>
-        let selectedNode = document.querySelector('.selected');
-        let isEditing = false; // 수정 모드 여부
+        // 화면 크기에 맞춰 중앙 좌표 계산 (헤더 높이 고려)
+        let nodes = [{ id: 0, text: "나", x: window.innerWidth / 2, y: (window.innerHeight - 180) / 2, parentId: null }];
+        let selectedId = 0;
+        let nextId = 1;
+        let draggingNode = null;
 
-        // 노드 선택 기능
-        function selectNode(element) {
-            if (isEditing) return; // 수정 중에는 선택 변경 방지
-            if (selectedNode) selectedNode.classList.remove('selected');
-            selectedNode = element;
-            selectedNode.classList.add('selected');
-            document.getElementById('wordInput').focus();
-        }
+        const container = document.getElementById('map-area');
+        const svg = document.getElementById('svg-canvas');
+        const input = document.getElementById('wordInput');
 
-        // 새 노드 추가 또는 선택된 노드 수정
-        document.getElementById('wordInput').addEventListener('keypress', function (e) {
-            if (e.key === 'Enter' && this.value.trim() !== "") {
-                if (isEditing) {
-                    // 수정 모드일 때
-                    saveEdit(this.value);
-                } else {
-                    // 추가 모드일 때
-                    addNode(this.value);
-                }
-                this.value = ""; // 입력창 비우기
-            }
-        });
+        function render() {
+            container.querySelectorAll('.node').forEach(n => n.remove());
+            svg.innerHTML = '';
+            nodes.forEach(node => {
+                const div = document.createElement('div');
+                div.className = `node ${node.id === selectedId ? 'selected' : ''} ${node.id === 0 ? 'root' : ''}`;
+                div.style.left = node.x + 'px';
+                div.style.top = node.y + 'px';
+                div.textContent = node.text;
 
-        document.getElementById('addNodeBtn').addEventListener('click', function () {
-            const inputVal = document.getElementById('wordInput').value.trim();
-            if (inputVal !== "") {
-                if (isEditing) {
-                    saveEdit(inputVal);
-                } else {
-                    addNode(inputVal);
-                }
-                document.getElementById('wordInput').value = "";
-            }
-        });
+                div.onmousedown = (e) => { if (e.button === 0) startDrag(e, node); };
+                div.onclick = () => { selectedId = node.id; render(); };
+                div.ondblclick = () => handleEdit();
 
-        // 노드 추가 함수
-        function addNode(text) {
-            if (!selectedNode) return;
+                container.appendChild(div);
 
-            const parentLi = selectedNode.closest('li'); // 선택된 노드의 부모 li
-
-            let childUl = parentLi.querySelector('ul');
-            if (!childUl) {
-                childUl = document.createElement('ul');
-                parentLi.appendChild(childUl);
-            }
-
-            const newLi = document.createElement('li');
-            const newNodeDiv = document.createElement('div');
-            newNodeDiv.className = 'node';
-            newNodeDiv.innerHTML = `<span class="node-text">${text}</span>`;
-            newNodeDiv.onclick = function () { selectNode(this); };
-            newNodeDiv.ondblclick = function () { editNode(this); }; // 더블클릭 수정 추가
-
-            newLi.appendChild(newNodeDiv);
-            childUl.appendChild(newLi);
-
-            selectNode(newNodeDiv); // 새로 만든 노드 선택
-        }
-
-        // 노드 수정 기능 (더블클릭 시)
-        function editNode(nodeElement) {
-            if (isEditing) return; // 이미 수정 중이라면 무시
-
-            isEditing = true;
-            const currentTextElement = nodeElement.querySelector('.node-text');
-            const currentText = currentTextElement ? currentTextElement.textContent : '';
-
-            // 기존 텍스트 숨기고 input 필드 생성
-            currentTextElement.style.display = 'none';
-
-            const editInput = document.createElement('input');
-            editInput.type = 'text';
-            editInput.className = 'node-input-edit';
-            editInput.value = currentText;
-            nodeElement.appendChild(editInput);
-            editInput.focus();
-
-            // Enter 또는 Focus Out 시 수정 완료
-            editInput.addEventListener('keypress', function (e) {
-                if (e.key === 'Enter') {
-                    updateNodeText(nodeElement, editInput.value);
+                if (node.parentId !== null) {
+                    const parent = nodes.find(n => n.id === node.parentId);
+                    if (parent) {
+                        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                        line.setAttribute("x1", parent.x); line.setAttribute("y1", parent.y);
+                        line.setAttribute("x2", node.x); line.setAttribute("y2", node.y);
+                        svg.appendChild(line);
+                    }
                 }
             });
-            editInput.addEventListener('blur', function () {
-                updateNodeText(nodeElement, editInput.value);
-            });
-
-            // 상단 입력창에도 현재 노드 텍스트 반영 (편의성)
-            document.getElementById('wordInput').value = currentText;
         }
 
-        // 노드 텍스트 업데이트 및 수정 모드 종료
-        function updateNodeText(nodeElement, newText) {
-            const textToSet = newText.trim() === "" ? "빈 노드" : newText.trim(); // 빈 값 방지
-
-            const currentTextElement = nodeElement.querySelector('.node-text');
-            currentTextElement.textContent = textToSet;
-            currentTextElement.style.display = 'inline-block'; // 다시 보이게
-
-            const editInput = nodeElement.querySelector('.node-input-edit');
-            if (editInput) {
-                nodeElement.removeChild(editInput);
-            }
-            isEditing = false;
-            document.getElementById('wordInput').value = ""; // 상단 입력창 초기화
-            document.getElementById('wordInput').focus(); // 다시 상단 입력창으로 포커스
+        function startDrag(e, node) {
+            draggingNode = node;
+            selectedId = node.id;
+            render();
+            const onMouseMove = (me) => {
+                if (draggingNode) {
+                    // 부모 컨테이너의 위치를 고려한 좌표 계산
+                    const rect = container.getBoundingClientRect();
+                    draggingNode.x = me.clientX - rect.left;
+                    draggingNode.y = me.clientY - rect.top;
+                    render();
+                }
+            };
+            const onMouseUp = () => {
+                draggingNode = null;
+                document.removeEventListener('mousemove', onMouseMove);
+                document.removeEventListener('mouseup', onMouseUp);
+            };
+            document.addEventListener('mousemove', onMouseMove);
+            document.addEventListener('mouseup', onMouseUp);
         }
 
-        // 상단 입력창에서 엔터 쳤을 때 수정 모드였다면 저장
-        function saveEdit(newText) {
-            if (selectedNode && isEditing) {
-                updateNodeText(selectedNode, newText);
+        function handleAdd() {
+            const text = input.value.trim();
+            if (!text) return;
+            const parent = nodes.find(n => n.id === selectedId);
+            const newNode = { id: nextId++, text: text, parentId: selectedId, x: parent.x + 80, y: parent.y + 80 };
+            nodes.push(newNode);
+            input.value = '';
+            selectedId = newNode.id;
+            render();
+        }
+
+        function handleEdit() {
+            const targetNode = nodes.find(n => n.id === selectedId);
+            if (!targetNode) return;
+            const newText = input.value.trim() || prompt("수정할 내용을 입력하세요:", targetNode.text);
+            if (newText) {
+                targetNode.text = newText;
+                input.value = "";
+                render();
             }
         }
 
-        // 초기 '나 (Me)' 노드 텍스트가 비어있을 때 플레이스홀더 표시
-        window.onload = function () {
-            const rootNodeText = document.querySelector('.tree .node .node-text');
-            if (rootNodeText.textContent.trim() === '') {
-                rootNodeText.classList.add('placeholder-text');
-                rootNodeText.textContent = '나 (Me) 입력';
+        function handleDelete() {
+            if (selectedId === 0) return alert("중심 노드는 삭제할 수 없습니다!");
+            if (confirm("이 노드와 하위 항목을 삭제할까요?")) {
+                const ids = [];
+                function collect(id) {
+                    ids.push(id);
+                    nodes.filter(n => n.parentId === id).forEach(c => collect(c.id));
+                }
+                collect(selectedId);
+                nodes = nodes.filter(n => !ids.includes(n.id));
+                selectedId = 0;
+                render();
             }
-        };
+        }
 
-        // --- JPG 다운로드 기능 ---
-        document.getElementById('downloadBtn').addEventListener('click', function () {
-            // 현재 선택된 노드의 강조를 일시적으로 제거 (캡처에 포함되지 않도록)
-            const currentSelected = document.querySelector('.node.selected');
-            if (currentSelected) {
-                currentSelected.classList.remove('selected');
-            }
+        function saveAsImage() {
+            const btn = document.querySelector('.btn-save');
+            btn.innerText = "저장중...";
+            const tempSelectedId = selectedId;
+            selectedId = null;
+            render();
 
-            const mindmapWrapper = document.getElementById('mindmapWrapper');
-
-            html2canvas(mindmapWrapper, {
-                scale: 2, // 해상도 2배로 높여서 캡처 (더 선명하게)
-                useCORS: true, // 외부 이미지 등을 사용할 경우 필요
-                backgroundColor: null, // 컨테이너의 배경색을 사용하지 않고 투명하게 캡처 (body 배경이 보이도록)
-                allowTaint: true // 웹페이지의 모든 콘텐츠를 캡처 허용 (보안 경고 발생 가능성 있음)
-            }).then(function (canvas) {
-                // 이미지 데이터 가져오기
-                const imageData = canvas.toDataURL('image/jpeg', 0.9); // JPG 형식, 품질 90%
-
-                // 다운로드를 위한 링크 생성
+            html2canvas(document.body, {
+                backgroundColor: "#1a1a2e",
+                scale: 2
+            }).then(canvas => {
                 const link = document.createElement('a');
-                link.href = imageData;
-                link.download = '나를_탐구하는_마인드맵.jpg'; // 파일 이름
-                document.body.appendChild(link);
+                link.download = `마인드맵.jpg`;
+                link.href = canvas.toDataURL('image/jpeg', 0.9);
                 link.click();
-                document.body.removeChild(link);
-
-                // 캡처 후 선택된 노드 강조 다시 복원
-                if (currentSelected) {
-                    currentSelected.classList.add('selected');
-                }
-            }).catch(error => {
-                console.error('마인드맵 캡처 중 오류 발생:', error);
-                alert('마인드맵 캡처에 실패했습니다. 콘솔을 확인해주세요.');
-                // 오류 발생 시에도 선택된 노드 강조 복원
-                if (currentSelected) {
-                    currentSelected.classList.add('selected');
-                }
+                selectedId = tempSelectedId;
+                render();
+                btn.innerText = "저장";
             });
-        });
+        }
 
+        input.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleAdd(); });
+        window.onresize = () => render();
+        render();
     </script>
-
 </body>
 
 </html>
